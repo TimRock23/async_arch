@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Зарегистрироваться{% endblock %}
+{% block content %}
+
+    <div>Зарегистрироваться</div>
+    <div>
+
+        {% if form.errors %}
+            {% for error in form.errors %}
+                <div role="alert">
+                    {{ error|escape }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" action="{% url "signup" %}">
+            {% csrf_token %}
+            {{  form.as_p }}
+            <button type="submit">
+                Зарегистрироваться
+            </button>
+        </form>
+    </div>
+
+{% endblock %}

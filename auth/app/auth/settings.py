@@ -43,7 +43,9 @@ ROOT_URLCONF = "auth.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [
+            os.path.join(BASE_DIR, "auth/templates"),
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -61,9 +63,13 @@ WSGI_APPLICATION = "auth.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRESQL_DATABASE", ""),
+        "USER": os.getenv("POSTGRESQL_USERNAME", ""),
+        "PASSWORD": os.getenv("POSTGRESQL_PASSWORD", ""),
+        "HOST": os.getenv("POSTGRESQL_HOST", ""),
+        "PORT": os.getenv("POSTGRESQL_PORT", 5432),
+    },
 }
 
 
@@ -94,6 +100,8 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -102,3 +110,5 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 
 AUTH_USER_MODEL = "users.User"
+
+LOGIN_URL = "/auth/login/"
