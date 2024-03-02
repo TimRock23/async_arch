@@ -1,23 +1,38 @@
 from django.contrib.auth.models import Group
-from rest_framework import generics, permissions
+from django.db import transaction
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
+from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.permissions import IsAuthenticated
 
-from users.serializers import UserSerializer, GroupSerializer
+from users.serializers import GroupSerializer, UserSerializer, UserCreateSerializer
 from users.models import User
 
 
-class UserList(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
+class UserListAPIView(ListAPIView):
+    permission_classes = [IsAuthenticated, TokenHasReadWriteScope]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-class UserDetails(generics.RetrieveAPIView):
-    permission_classes = [permissions.IsAuthenticated, TokenHasReadWriteScope]
+
+class UserDetailsAPIView(RetrieveAPIView):
+    permission_classes = [IsAuthenticated, TokenHasReadWriteScope]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-class GroupList(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated, TokenHasScope]
+
+class UserCreateAPIView(CreateAPIView):
+    permission_classes = []
+    queryset = User.objects.all()
+    serializer_class = UserCreateSerializer
+
+    def perform_create(self, serializer):
+        with transaction.atomic():
+            super().perform_create(serializer)
+            # место для продюсинга данных
+
+
+class GroupList(ListAPIView):
+    permission_classes = [IsAuthenticated, TokenHasScope]
     required_scopes = ["groups"]
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
