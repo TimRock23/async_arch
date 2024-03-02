@@ -24,7 +24,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "oauth2_provider",
-    "corsheaders",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
@@ -111,4 +111,22 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 AUTH_USER_MODEL = "users.User"
 
-LOGIN_URL = "/auth/login/"
+
+# Django Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
+
+
+# OAuth2
+OAUTH2_PROVIDER = {
+    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
+}
+
+LOGIN_URL = '/admin/login/'
+

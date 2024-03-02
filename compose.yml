@@ -3,9 +3,8 @@ version: "3.11"
 services:
   auth: &auth_conf
     build: ./auth_service
-    command: gunicorn --chdir ./app wsgi:application -b :8000 
     volumes:
-      - ./app:/app
+      - ./auth_service/app:/app
     depends_on:
       - db
       - auth_migrate
@@ -16,7 +15,7 @@ services:
 
   auth_migrate:
     <<: *auth_conf
-    command: python3 app/manage.py migrate
+    command: python3 manage.py migrate
     depends_on: 
       db:
         condition: service_healthy
