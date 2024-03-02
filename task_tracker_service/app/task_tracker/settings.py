@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -16,19 +17,16 @@ ALLOWED_HOSTS = ["*"]
 
 
 INSTALLED_APPS = [
-    "users",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "oauth2_provider",
     "rest_framework",
 ]
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -38,14 +36,12 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "auth.urls"
+ROOT_URLCONF = "task_tracker.urls"
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [
-            os.path.join(BASE_DIR, "auth/templates"),
-        ],
+        "DIRS": [],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -58,7 +54,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "auth.wsgi.application"
+WSGI_APPLICATION = "task_tracker.wsgi.application"
 
 
 DATABASES = {
@@ -71,7 +67,6 @@ DATABASES = {
         "PORT": os.getenv("POSTGRESQL_PORT", 5432),
     },
 }
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -100,32 +95,5 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
-
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-
-CORS_ORIGIN_ALLOW_ALL = True
-
-
-AUTH_USER_MODEL = "users.User"
-
-
-# Django Rest Framework
-REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
-    ),
-    "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.IsAuthenticated",
-    )
-}
-
-
-# OAuth2
-OAUTH2_PROVIDER = {
-    "SCOPES": {"read": "Read scope", "write": "Write scope", "groups": "Access to your groups"}
-}
-
-LOGIN_URL = "/admin/login/"
